@@ -1,36 +1,49 @@
 {
- "properties": {
-  "displayName": "PRXCSP - Require a billing tag on resources",
-  "policyType": "Custom",
-  "mode": "Indexed",
-  "description": "Audits existence of a billing tag. Does not apply to resource groups.",
-  "metadata": {
-   "category": "Tags",
-   "createdBy": "be208dc9-f286-419f-843c-4b9803957187",
-   "createdOn": "2022-01-20T16:24:36.5075212Z",
-   "updatedBy": "be208dc9-f286-419f-843c-4b9803957187",
-   "updatedOn": "2022-01-26T14:32:52.2223049Z"
-  },
-  "parameters": {},
-  "policyRule": {
-   "if": {
-    "anyOf": [
-     {
-      "field": "tags[Billing]",
-      "notIn": [
-       "Billable",
-       "Non-Billable",
-       "Non-Billable_Core"
-      ]
-     }
-    ]
-   },
-   "then": {
-    "effect": "audit"
-   }
-  }
- },
- "id": "/subscriptions/3a682cd4-2e63-41f4-82a5-387518f59040/providers/Microsoft.Authorization/policyDefinitions/122c0557-c6d6-43bd-bd92-b5d10a99b09c",
- "type": "Microsoft.Authorization/policyDefinitions",
- "name": "122c0557-c6d6-43bd-bd92-b5d10a99b09c"
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "apiVersion": "2018-05-01",
+            "name": "PRXCSP-RequireBillingTagPolicy",
+            "properties": {
+                "displayName": "PRXCSP - Require a billing tag on resources",
+                "policyType": "Custom",
+                "mode": "Indexed",
+                "description": "Audits existence of a billing tag. Does not apply to resource groups.",
+                "policyRule": {
+                    "if": {
+                     "anyOf": [
+                      {
+                       "field": "tags[Billing]",
+                       "notIn": [
+                        "Billable",
+                        "Non-Billable",
+                        "Non-Billable_Core"
+                       ]
+                      }
+                     ]
+                    },
+                        "then": {
+                        "effect": "audit"
+                    }
+                }
+        }
+    },
+    {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2018-05-01",
+        "name": "PRXCSP-RequireBillingTagAssignment",
+        "dependsOn": [
+            "PRXCSP-RequireBillingTagPolicy"
+        ],
+            "properties":{
+            "description": "Audits existence of a billing tag. Does not apply to resource groups.",
+            "displayName": "PRXCSP - Require a billing tag on resources",
+            "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/', 'PRXCSP-RequireBillingTagPolicy')]"
+            }
+    }
+],
+"outputs": {}
 }
