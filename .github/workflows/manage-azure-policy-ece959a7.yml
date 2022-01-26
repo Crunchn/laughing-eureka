@@ -1,0 +1,32 @@
+name: manage-azure-policy-ece959a7
+on:
+  workflow_dispatch:
+    inputs:
+      remarks:
+        description: 'Reason for triggering the workflow run'
+        required: false
+        default: 'Updating Azure Policies'
+
+
+## Uncomment the following if you wish to automatically trigger workflow run with every commit
+#
+#  push:
+#    paths:
+#      - 'policies/PRXCSP_-_Require_a_billing_tag_on_resources_122c0557-c6d6-43bd-bd92-b5d10a99b09c/**'
+#      - .github/workflows/manage-azure-policy-ece959a7.yml
+jobs:
+  apply-azure-policy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS_ece959a7}}
+        allow-no-subscriptions: true
+    - name: Create or Update Azure Policies
+      uses: azure/manage-azure-policy@v0
+      with:
+        paths: |
+          policies/PRXCSP_-_Require_a_billing_tag_on_resources_122c0557-c6d6-43bd-bd92-b5d10a99b09c/**
